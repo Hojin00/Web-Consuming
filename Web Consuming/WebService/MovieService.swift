@@ -14,13 +14,8 @@ struct Movie {
     let overview: String
     let genreIds: [Int]
     let posterPath: String
-    let posterImage: UIImage
 }
 
-struct MovieService {
-    
-    
-}
 
 struct MovieAPI {
     
@@ -48,10 +43,9 @@ struct MovieAPI {
                 
                 else { continue }
                 
-                guard let image = getMoviePoster(with: URL(string: "http://image.tmdb.org/t/p/w500/jTswp6KyDYKtvC52GbHagrZbGvD.jpg"))
-                else { return }
                 
-                moviesArray.append(Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath, posterImage: image))
+                
+                moviesArray.append(Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath))
                 
             }
             
@@ -88,11 +82,9 @@ struct MovieAPI {
                       let posterPath = movie["poster_path"] as? String
                 
                 else { continue }
+            
                 
-                guard let image = getMoviePoster(with: URL(string: "http://image.tmdb.org/t/p/w500/jTswp6KyDYKtvC52GbHagrZbGvD.jpg"))
-                else { return }
-                
-                moviesArray.append(Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath, posterImage: image))
+                moviesArray.append(Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath))
                 
             }
             

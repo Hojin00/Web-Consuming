@@ -85,11 +85,22 @@
                     <navigationItem key="navigationItem" title="Movies" id="pco-CM-0kw"/>
                     <connections>
                         <outlet property="tableView" destination="LMT-lM-hDe" id="e1S-gW-kOc"/>
+                        <segue destination="nhk-Tf-gh7" kind="show" id="6Ki-12-rDj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="928.98550724637687" y="93.75"/>
+        </scene>
+        <!--Storyboard Reference-->
+        <scene sceneID="aBM-1M-8UG">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="toDetail" id="nhk-Tf-gh7" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="KnH-hv-ytd"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hR6-p8-ewi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1840" y="94"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="oba-CR-cjw">
