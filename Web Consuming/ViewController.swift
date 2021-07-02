@@ -7,60 +7,59 @@
 
 import UIKit
 
-struct Movie {
-    let title: String
-    let voteAverage: Double
-    let overview: String
-    let genreIds: [Int]
-    let posterPath: String
-}
 
-class ViewController: UIViewController {
 
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    
     
     @IBOutlet weak var tableView: UITableView!
     
     var movies: [Movie] = []
+    let moviesAPI = MovieAPI()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.dataSource = self
+        tableView.delegate = self
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=2f8e29176bab443251fb4a3303db7498&language=en-US&page=1")!
-        
-        typealias WebMovies = [String: Any]
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed),
-                  let dictionary = json as? [String: Any],
-                  let movies = dictionary["results"] as? [WebMovies]
+        moviesAPI.getPopularMovie(page: 1, completionHandler: { movies in
+            self.movies = movies
             
-            else { return }
-            
-            
-            var localMoviesArray: [Movie] = []
-            
-            for movieDictionary in movies {
-                guard let title = movieDictionary["title"] as? String,
-                      let voteAverage = movieDictionary["vote_average"] as? Double,
-                      let overview = movieDictionary["overview"] as? String,
-                      let genreIds = movieDictionary["genre_ids"] as? [Int],
-                      let posterPath = movieDictionary["poster_path"] as? String
-                
-                else { return }
-                
-                let movie = Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath)
-                
-                localMoviesArray.append(movie)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
+        })
+        
+        moviesAPI.getNowPlayingMovie(page: 1, completionHandler: { movies in
+            self.movies = movies
             
-            self.movies = localMoviesArray
-            
-            print(self.movies)
-            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return movies.count
+    }
+    
+   
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "moviesList", for: indexPath) as? MoviesListTableViewCell else {
+            fatalError("Não foi possivel converter a celula para MovieCell")
         }
-        .resume()
+        
+
+        let movie = movies[indexPath.row]
+        
+        cell.titleLabel.text = movie.title
+        cell.overviewLabel.text = movie.overview
+        cell.voteAverageLabel.text = String(movie.voteAverage)
+        cell.posterImage.image = movie.posterImage
+        
+        return cell
     }
 
 
