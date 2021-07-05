@@ -8,7 +8,13 @@
 import UIKit
 
 
-
+struct MovieStruct {
+    var title : String
+    var description : String
+    var genres : [Int]
+    var rating : String
+    var image : UIImage
+}
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
@@ -52,13 +58,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if section == 0{
             return 2
         } else if section == 1{
             return 2
         }
-        return 0
+
+       return 0
     }
+    
+    //        if section == 0{
+    //            if self.movieSection[0]["Popular"]?.count ?? -1 > 0{
+    //                return self.movieSection[0]["Popular"]?.count ?? 0
+    //            } else{
+    //                return 0
+    //            }
+    //
+    //
+    //        }
+    //        else if section == 1{
+    //            return self.movieSection[0]["Now Playing"]?.count ?? 0
+    //
+    //        }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0{
@@ -73,11 +95,39 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         performSegue(withIdentifier: "descri", sender: indexPath)
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        
+        
         if segue.identifier=="descri", let indexPath = sender as? IndexPath {
+            let destination = segue.destination as? MoviesDetailController
+            
+            if indexPath.section == 0 {
+                guard let movies = movieSection[indexPath.section]["Popular"] else { fatalError() }
+                
+                
+                let moviesPop = movies[indexPath.row]
+                
+                guard let imagePop = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesPop.posterPath)")) else { fatalError() }
+                
+                destination?.movieStr = MovieStruct.init(title: moviesPop.title, description: moviesPop.overview, genres: moviesPop.genreIds, rating: String(moviesPop.voteAverage), image: imagePop)
+                
+                
+            }
+            else if indexPath.section == 1 {
+                guard let movies = movieSection[indexPath.section]["Now Playing"] else { fatalError() }
+                let moviesNow = movies[indexPath.row]
+                
+                guard let imageNow = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesNow.posterPath)")) else { fatalError() }
+                
+                destination?.movieStr = MovieStruct.init(title: moviesNow.title, description: moviesNow.overview, genres: moviesNow.genreIds, rating: String(moviesNow.voteAverage), image: imageNow)
             
             
+            
+            }
+           
         }
     }
+       
     
    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
