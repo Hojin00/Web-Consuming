@@ -59,8 +59,8 @@ struct MovieAPI {
             return UIImage(data: data)
         }
     
-    func getNowPlayingMovie(page: Int, completionHandler: @escaping ([Movie]) -> Void){
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=2f8e29176bab443251fb4a3303db7498&language=en-US&page=\(page)")!
+    func getMovies(get: String, page: Int, completionHandler: @escaping ([Movie]) -> Void){
+        let url = URL(string: "https://api.themoviedb.org/3/movie/\(get)?api_key=2f8e29176bab443251fb4a3303db7498&language=en-US&page=\(page)")!
         
         typealias NowPlayingMovies = [String: Any]
         
@@ -87,12 +87,44 @@ struct MovieAPI {
                 moviesArray.append(Movie(title: title, voteAverage: voteAverage, overview: overview, genreIds: genreIds, posterPath: posterPath))
                 
             }
-            
             completionHandler(moviesArray)
         }
         .resume()
 
     }
+    
+    func getGenres(genres: [Int], completionHandler: @escaping ([String]) -> Void) {
+        let url = URL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=2f8e29176bab443251fb4a3303db7498&language=en-US")!
+        
+        typealias genresTypes = [String: Any]
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed),
+                  let dictionary = json as? [String: Any],
+                  let genresList = dictionary["genres"] as? [genresTypes]
+            
+            else { return }
+            
+            var genresArray: [String] = []
+            
+            for genreChosen in genres{
+                
+                for genre in genresList{
+                    guard let id = genre["id"] as? Int,
+                          let name = genre["name"] as? String
+                    
+                    else { return }
+                    
+                    if id == genreChosen{
+                        genresArray.append(name)
+                        
+                    }
+                }
+            }
+            
+            completionHandler(genresArray)
+        }
+        .resume()
+        
+    }
 }
-
-

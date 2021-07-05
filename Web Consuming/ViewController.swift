@@ -1,4 +1,4 @@
-//
+
 //  ViewController.swift
 //  Web Consuming
 //
@@ -15,6 +15,7 @@ struct MovieStruct {
     var rating : String
     var image : UIImage
 }
+
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
@@ -24,7 +25,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var PopularMovies: [Movie] = []
     var NowPlayingMovies: [Movie] = []
     let moviesAPI = MovieAPI()
-    var movieSection: [[String: [Movie]]] = []
+    var genreTypesNames: [String]?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +34,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         
-        moviesAPI.getPopularMovie(page: 1, completionHandler: { movies in
-            self.movieSection[0]["Popular"] = movies
+        moviesAPI.getMovies(get: "popular", page: 1, completionHandler: { movies in
+            self.PopularMovies = movies
             
             
             DispatchQueue.main.async {
@@ -41,46 +43,37 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         })
         
-        moviesAPI.getNowPlayingMovie(page: 1, completionHandler: { movies in
-            self.movieSection[1]["Now Playing"] = movies
+        moviesAPI.getMovies(get: "now_playing", page: 1, completionHandler: { movies in
+            self.NowPlayingMovies = movies
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         })
         
+//        for eachGenre in self.PopularMovies{
+//            self.moviesAPI.getGenres(genres: eachGenre.genreIds) { genreType in
+//                self.genreTypesNames = genreType
+//            }
+//
+//            print("title: \(eachGenre.title), genreTypes: \(self.genreTypesNames)")
+//        }
         
-        movieSection = [["Popular": PopularMovies], ["Now Playing": NowPlayingMovies]]
+    
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return movieSection.count
+        return 2
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if section == 0{
-            return 2
+            return PopularMovies.count
         } else if section == 1{
-            return 2
+            return NowPlayingMovies.count
         }
-
-       return 0
+        return 0
     }
-    
-    //        if section == 0{
-    //            if self.movieSection[0]["Popular"]?.count ?? -1 > 0{
-    //                return self.movieSection[0]["Popular"]?.count ?? 0
-    //            } else{
-    //                return 0
-    //            }
-    //
-    //
-    //        }
-    //        else if section == 1{
-    //            return self.movieSection[0]["Now Playing"]?.count ?? 0
-    //
-    //        }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0{
@@ -91,6 +84,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return nil
     }
     
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "moviesList", for: indexPath) as? MoviesListTableViewCell else {
+            fatalError("Não foi possivel converter a celula para MovieCell")
+        }
+        
+        if indexPath.section == 0 {
+            
+            let moviesPop = PopularMovies[indexPath.row]
+           
+            let url = URL(string: "https://image.tmdb.org/t/p/w500/\(moviesPop.posterPath)")
+            
+            cell.titleLabel.text = moviesPop.title
+            cell.overviewLabel.text = moviesPop.overview
+            cell.voteAverageLabel.text = String(moviesPop.voteAverage)
+            cell.posterImage.load(url: url! )
+            
+        } else if indexPath.section == 1 {
+            
+            let moviesNow = NowPlayingMovies[indexPath.row]
+            
+            let url = URL(string: "https://image.tmdb.org/t/p/w500/\(moviesNow.posterPath)")
+           
+            
+            cell.titleLabel.text = moviesNow.title
+            cell.overviewLabel.text = moviesNow.overview
+            cell.voteAverageLabel.text = String(moviesNow.voteAverage)
+            cell.posterImage.load(url: url!)
+        }
+        
+        
+        return cell
+    }
+    
+    //segue identifier: toMovieDetails
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "descri", sender: indexPath)
     }
@@ -102,10 +130,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let destination = segue.destination as? MoviesDetailController
             
             if indexPath.section == 0 {
-                guard let movies = movieSection[indexPath.section]["Popular"] else { fatalError() }
+
                 
-                
-                let moviesPop = movies[indexPath.row]
+                let moviesPop = PopularMovies[indexPath.row]
                 
                 guard let imagePop = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesPop.posterPath)")) else { fatalError() }
                 
@@ -114,8 +141,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
             }
             else if indexPath.section == 1 {
-                guard let movies = movieSection[indexPath.section]["Now Playing"] else { fatalError() }
-                let moviesNow = movies[indexPath.row]
+              
+                let moviesNow = NowPlayingMovies[indexPath.row]
                 
                 guard let imageNow = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesNow.posterPath)")) else { fatalError() }
                 
@@ -127,43 +154,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
            
         }
     }
-       
-    
-   
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "moviesList", for: indexPath) as? MoviesListTableViewCell else {
-            fatalError("Não foi possivel converter a celula para MovieCell")
-        }
-        
-        if indexPath.section == 0 {
-            guard let movies = movieSection[indexPath.section]["Popular"] else { fatalError() }
-            
-            
-            let moviesPop = movies[indexPath.row]
-            
-            guard let imagePop = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesPop.posterPath)")) else { fatalError() }
-            
-            cell.titleLabel.text = moviesPop.title
-            cell.overviewLabel.text = moviesPop.overview
-            cell.voteAverageLabel.text = String(moviesPop.voteAverage)
-            cell.posterImage.image = imagePop
-            
-        } else if indexPath.section == 1 {
-            guard let movies = movieSection[indexPath.section]["Now Playing"] else { fatalError() }
-            let moviesNow = movies[indexPath.row]
-            
-            guard let imageNow = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesNow.posterPath)")) else { fatalError() }
-            
-            cell.titleLabel.text = moviesNow.title
-            cell.overviewLabel.text = moviesNow.overview
-            cell.voteAverageLabel.text = String(moviesNow.voteAverage)
-            cell.posterImage.image = imageNow
-        }
-        
-        
-        return cell
-    }
-
-
 }
-
+    extension UIImageView {
+        func load(url: URL) {
+            DispatchQueue.global().async { [weak self] in
+                if let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self?.image = image
+                        }
+                    }
+                }
+            }
+        }
+    }
