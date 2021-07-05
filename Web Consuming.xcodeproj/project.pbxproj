@@ -68,14 +68,14 @@
 			children = (
 				B234E6F5268E4330008636DE /* AppDelegate.swift */,
 				B234E6F7268E4330008636DE /* SceneDelegate.swift */,
+				B234E6FB268E4330008636DE /* Main.storyboard */,
 				B234E6F9268E4330008636DE /* ViewController.swift */,
 				B29613D9268FA1D1000B2225 /* MoviesDetailController.swift */,
-				B29613D7268FA108000B2225 /* MoviesDetail.storyboard */,
 				FDB2285B26937B34003285D8 /* MoviesDetailsTableViewCell.swift */,
 				B234E70D268F79EC008636DE /* WebService */,
 				B234E70B268E66C5008636DE /* MoviesListTableViewCell.swift */,
-				B234E6FB268E4330008636DE /* Main.storyboard */,
 				B234E6FE268E4333008636DE /* Assets.xcassets */,
+				B29613D7268FA108000B2225 /* MoviesDetail.storyboard */,
 				B234E700268E4333008636DE /* LaunchScreen.storyboard */,
 				B234E703268E4333008636DE /* Info.plist */,
 			);

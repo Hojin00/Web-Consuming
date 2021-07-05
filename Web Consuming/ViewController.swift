@@ -127,7 +127,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         if segue.identifier=="descri", let indexPath = sender as? IndexPath {
-            let destination = segue.destination as? MoviesDetailController
+            let destination = segue.destination as? UINavigationController
+            let movieDetails = destination?.viewControllers.first as? MoviesDetailController
             
             if indexPath.section == 0 {
 
@@ -136,7 +137,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
                 guard let imagePop = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesPop.posterPath)")) else { fatalError() }
                 
-                destination?.movieStr = MovieStruct.init(title: moviesPop.title, description: moviesPop.overview, genres: moviesPop.genreIds, rating: String(moviesPop.voteAverage), image: imagePop)
+                movieDetails?.movieStr = MovieStruct.init(title: moviesPop.title, description: moviesPop.overview, genres: moviesPop.genreIds, rating: String(moviesPop.voteAverage), image: imagePop)
                 
                 
             }
@@ -146,7 +147,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
                 guard let imageNow = moviesAPI.getMoviePoster(with: URL(string: "https://image.tmdb.org/t/p/w500/\(moviesNow.posterPath)")) else { fatalError() }
                 
-                destination?.movieStr = MovieStruct.init(title: moviesNow.title, description: moviesNow.overview, genres: moviesNow.genreIds, rating: String(moviesNow.voteAverage), image: imageNow)
+                movieDetails?.movieStr = MovieStruct.init(title: moviesNow.title, description: moviesNow.overview, genres: moviesNow.genreIds, rating: String(moviesNow.voteAverage), image: imageNow)
             
             
             
