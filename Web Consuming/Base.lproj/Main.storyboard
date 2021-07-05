@@ -85,7 +85,7 @@
                     <navigationItem key="navigationItem" title="Movies" id="pco-CM-0kw"/>
                     <connections>
                         <outlet property="tableView" destination="LMT-lM-hDe" id="e1S-gW-kOc"/>
-                        <segue destination="nhk-Tf-gh7" kind="show" id="6Ki-12-rDj"/>
+                        <segue destination="nhk-Tf-gh7" kind="show" identifier="descri" id="6Ki-12-rDj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

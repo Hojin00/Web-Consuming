@@ -70,7 +70,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
+        performSegue(withIdentifier: "descri", sender: indexPath)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier=="descri", let indexPath = sender as? IndexPath {
+            
+            
+        }
     }
     
    

@@ -11,7 +11,7 @@
         <!--Details-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                <viewController id="Y6W-OH-hqX" customClass="MoviesDetailController" customModule="Web_Consuming" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -30,7 +30,7 @@
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="H1M-vW-WZi">
-                                        <rect key="frame" x="150" y="53.5" width="232" height="151"/>
+                                        <rect key="frame" x="150" y="90.5" width="232" height="114"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Spk-di-6Xa">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="20.5"/>
@@ -45,13 +45,17 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="nDd-EF-laG">
-                                                <rect key="frame" x="0.0" y="101" width="232" height="50"/>
+                                                <rect key="frame" x="0.0" y="101" width="232" height="13"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lbx-f0-H0Q">
-                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Lbx-f0-H0Q">
+                                                        <rect key="frame" x="0.0" y="-0.5" width="13" height="13"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="13" id="Kyr-4x-y9X"/>
+                                                            <constraint firstAttribute="height" constant="13" id="PBS-Cm-dVM"/>
+                                                        </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bct-Mp-BnF">
-                                                        <rect key="frame" x="55" y="0.0" width="177" height="50"/>
+                                                        <rect key="frame" x="18" y="0.0" width="214" height="13"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -77,6 +81,13 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Details" id="Hut-pH-TRW"/>
+                    <connections>
+                        <outlet property="genres" destination="WOc-Av-eFC" id="kTR-Zp-vqv"/>
+                        <outlet property="poster" destination="jKQ-Zs-1tf" id="vM9-T7-QbV"/>
+                        <outlet property="rating" destination="Bct-Mp-BnF" id="cgA-3R-wJB"/>
+                        <outlet property="tableDescription" destination="toU-GX-f1N" id="x8Y-9o-AEk"/>
+                        <outlet property="titulo" destination="Spk-di-6Xa" id="j65-h6-Bwg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -102,6 +113,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
